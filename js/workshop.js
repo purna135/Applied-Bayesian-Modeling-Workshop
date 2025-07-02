@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Countdown timer for course start date
     function updateCourseTimer() {
         const timerEl = document.getElementById('course-timer');
-        const startDate = new Date('2025-06-02T15:00:00Z');
+        const startDate = new Date('2025-08-02T15:00:00Z');
         const now = new Date();
         let diff = Math.max(0, startDate - now);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
