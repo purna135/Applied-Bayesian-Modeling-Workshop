@@ -9,41 +9,45 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleEnrollClick(e) {
         e.preventDefault();
         
-        if (!termsCheckbox.checked) {
-            termsMessage.style.display = 'block';
+        if (!termsCheckbox || !termsCheckbox.checked) {
+            if (termsMessage) termsMessage.style.display = 'block';
             setTimeout(() => {
-                termsMessage.style.display = 'none';
+                if (termsMessage) termsMessage.style.display = 'none';
             }, 2000);
             return false;
         }
         
         // If checkbox is checked, allow the link to work
-        window.open(paymentUrl, '_blank');
+        if (paymentUrl) window.open(paymentUrl, '_blank');
     }
 
     // Add click event listener to the button
-    enrollBtn.addEventListener('click', handleEnrollClick);
+    if (enrollBtn) enrollBtn.addEventListener('click', handleEnrollClick);
 
     // Handle checkbox change
-    termsCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            termsMessage.style.display = 'none';
-            enrollBtn.classList.add('active');
-        } else {
-            enrollBtn.classList.remove('active');
-        }
-    });
+    if (termsCheckbox && enrollBtn) {
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (termsMessage) termsMessage.style.display = 'none';
+                enrollBtn.classList.add('active');
+            } else {
+                enrollBtn.classList.remove('active');
+            }
+        });
+    }
 
     // Expand/collapse instructor bios
     document.querySelectorAll('.bio-toggle').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var bioContainer = btn.closest('.instructor-card__bio');
-            bioContainer.classList.toggle('expanded');
-            btn.classList.toggle('open');
-            if (bioContainer.classList.contains('expanded')) {
-                btn.setAttribute('aria-label', 'Show less');
-            } else {
-                btn.setAttribute('aria-label', 'Show more');
+            if (bioContainer) {
+                bioContainer.classList.toggle('expanded');
+                btn.classList.toggle('open');
+                if (bioContainer.classList.contains('expanded')) {
+                    btn.setAttribute('aria-label', 'Show less');
+                } else {
+                    btn.setAttribute('aria-label', 'Show more');
+                }
             }
         });
     });
@@ -84,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let interval;
 
     function showSlide(idx) {
+        if (!textEl || !imgEl || dots.length === 0) return;
         textEl.textContent = slides[idx].text;
         imgEl.src = slides[idx].img;
         dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
@@ -93,25 +98,29 @@ document.addEventListener('DOMContentLoaded', function () {
     function prevSlide() { showSlide((current - 1 + slides.length) % slides.length); }
     function startAuto() { interval = setInterval(nextSlide, 3000); }
     function stopAuto() { clearInterval(interval); }
-    left.addEventListener('click', () => { stopAuto(); prevSlide(); startAuto(); });
-    right.addEventListener('click', () => { stopAuto(); nextSlide(); startAuto(); });
-    dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => { stopAuto(); showSlide(i); startAuto(); });
-    });
-    showSlide(0);
-    startAuto();
+
+    if (left && right && dots.length > 0 && textEl && imgEl) {
+        left.addEventListener('click', () => { stopAuto(); prevSlide(); startAuto(); });
+        right.addEventListener('click', () => { stopAuto(); nextSlide(); startAuto(); });
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { stopAuto(); showSlide(i); startAuto(); });
+        });
+        showSlide(0);
+        startAuto();
+    }
 
     // FAQ accordion logic
     document.querySelectorAll('.faq__question').forEach(function (btn) {
         btn.addEventListener('click', function () {
             const item = btn.closest('.faq__item');
-            item.classList.toggle('open');
+            if (item) item.classList.toggle('open');
         });
     });
 
     // Countdown timer for course start date
+    const timerEl = document.getElementById('course-timer');
     function updateCourseTimer() {
-        const timerEl = document.getElementById('course-timer');
+        if (!timerEl) return;
         const startDate = new Date('2025-08-02T15:00:00Z');
         const now = new Date();
         let diff = Math.max(0, startDate - now);
@@ -124,6 +133,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const secs = Math.floor(diff / 1000);
         timerEl.textContent = `${days}D : ${String(hours).padStart(2, '0')}H : ${String(mins).padStart(2, '0')}M : ${String(secs).padStart(2, '0')}S`;
     }
-    updateCourseTimer();
-    setInterval(updateCourseTimer, 1000);
+    if (timerEl) {
+        updateCourseTimer();
+        setInterval(updateCourseTimer, 1000);
+    }
 });
