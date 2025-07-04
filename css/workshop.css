@@ -724,6 +724,13 @@ img {
     gap: 0.5rem;
     align-items: stretch;
     margin: 2rem 0;
+    transition: var(--transition);
+}
+
+.course-card.highlight {
+    box-shadow: 0 4px 16px rgba(0, 91, 210, 0.3);
+    border: 1px solid var(--primary);
+    transform: scale(1.02);
 }
 
 .course-card__title {

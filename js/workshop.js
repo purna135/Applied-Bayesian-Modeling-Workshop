@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Terms checkbox and button handling
     const termsCheckbox = document.getElementById('termsCheckbox');
-    const enrollBtn = document.getElementById('enrollBtn');
+    const enrollBtn = document.getElementById('enroll-now');
     const termsMessage = document.getElementById('termsMessage');
-    const paymentUrl = enrollBtn.href;
+    const courseCard = document.querySelector('.course-card');
+    const paymentUrl = enrollBtn ? enrollBtn.href : '';
 
     // Function to handle button click
     function handleEnrollClick(e) {
@@ -33,6 +34,26 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 enrollBtn.classList.remove('active');
             }
+        });
+    }
+
+    // Handle header enrollment anchor link click
+    const headerEnrollLink = document.querySelector('a[href="#enroll-now"]');
+    if (headerEnrollLink && courseCard) {
+        headerEnrollLink.addEventListener('click', function() {
+            // Show terms message and highlight the course card after a short delay
+            setTimeout(() => {
+                courseCard.classList.add('highlight');
+                if (termsMessage) {
+                    termsMessage.style.display = 'block';
+                    termsMessage.textContent = 'Please accept the terms to continue';
+                }
+                
+                // Remove highlight after 3 seconds
+                setTimeout(() => {
+                    courseCard.classList.remove('highlight');
+                }, 3000);
+            }, 500);
         });
     }
 
